@@ -11,7 +11,10 @@ for red, green and blue respectively
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+<<<<<<< HEAD
 #include <limits.h>
+=======
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
 
 #include "ml6.h"
 #include "display.h"
@@ -19,7 +22,10 @@ for red, green and blue respectively
 
 /*======== void plot() ==========
 Inputs:   screen s
+<<<<<<< HEAD
          zbuffer zb
+=======
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
          color c
          int x
          int y 
@@ -31,9 +37,16 @@ If you wish to change this behavior, you can change the indicies
 of s that get set. For example, using s[x][YRES-1-y] will have
 pixel 0, 0 located at the lower left corner of the screen
 
+<<<<<<< HEAD
 jdyrlandweaver
 ====================*/
 void plot( screen s, zbuffer zb, color c, int x, int y, double z) {
+=======
+02/12/10 09:09:00
+jdyrlandweaver
+====================*/
+void plot( screen s, color c, int x, int y) {
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
   int newy = YRES - 1 - y;
   if ( x >= 0 && x < XRES && newy >=0 && newy < YRES )
     s[x][newy] = c;
@@ -44,6 +57,7 @@ Inputs:   screen s
 Returns: 
 Sets every color in screen s to black
 
+<<<<<<< HEAD
 jdyrlandweaver
 ====================*/
 void clear_screen( screen s ) {
@@ -58,12 +72,21 @@ void clear_screen( screen s ) {
   c.red = 255;
   c.green = 255;
   c.blue = 255;
+=======
+02/12/10 09:13:40
+jdyrlandweaver
+====================*/
+void clear_screen( screen s,   color c ) {
+
+  int x, y;
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
 
   for ( y=0; y < YRES; y++ )
     for ( x=0; x < XRES; x++)      
       s[x][y] = c;
 }
 
+<<<<<<< HEAD
 /*======== void clear_zbuffer() ==========
 Inputs:   zbuffer   
 Returns: 
@@ -80,6 +103,8 @@ void clear_zbuffer( zbuffer zb ) {
       zb[x][y] = LONG_MIN;
 }
 
+=======
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
 /*======== void save_ppm() ==========
 Inputs:   screen s
          char *file 
@@ -136,6 +161,10 @@ void save_extension( screen s, char *file) {
     fprintf(f, "\n");
   }
   pclose(f);
+<<<<<<< HEAD
+=======
+  printf("\n--> image saved to %s <--\n", file);
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
 }
 
 
@@ -148,7 +177,11 @@ Will display the screen s on your monitor
 jdyrlandweaver
 ====================*/
 void display( screen s) {
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
   int x, y;
   FILE *f;
 
@@ -164,7 +197,10 @@ void display( screen s) {
   pclose(f);
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
 void make_animation( char * name ) {
 
   int e, f;
@@ -172,10 +208,31 @@ void make_animation( char * name ) {
 
   sprintf(name_arg, "anim/%s*", name);
   strncat(name, ".gif", 128);
+<<<<<<< HEAD
   printf("Making animation: %s\n", name);
+=======
+  printf("\n--->Making animation: %s<---\n", name);
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
   f = fork();
   if (f == 0) {
     e = execlp("convert", "convert", "-delay", "3", name_arg, name, NULL);
     printf("e: %d errno: %d: %s\n", e, errno, strerror(errno));
   }
 }
+<<<<<<< HEAD
+=======
+
+/*======== void swap() ==========
+Inputs: int * a, int * b 
+Returns:
+Swaps values at a and b
+
+02/14/17 18:25:30
+jschluger
+====================*/
+void swap( int * a, int * b ) {
+  int tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+>>>>>>> 005d0e23740f78722af44ae25736bf8f68ba63cd
