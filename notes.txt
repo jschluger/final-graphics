@@ -1,0 +1,44 @@
+6.1.17
+
+Lighting Equation
+-----------------
+I = Iambient + Idiffuse + Ispecular
+
+
+Ambient Reflection
+------------------
+- A : ambient light
+  - (0, 255)
+- Ka : constant of ambient reflection
+  - (0, 1)
+
+- Iambient = A * Ka
+
+
+Diffuse Reflection (matte)
+------------------
+- L : point light source
+  - <x, y, z> (0, 255)
+- Kd : constant of diffuse reflection
+  - (0, 1)
+- theta : angle between L and N (normal to surface)
+- Reflected light is evenly distrubuted in all directions
+  - strongest when theta = 0
+
+- Idiffuse = L * Kd * cos(theta)
+  - cos(theta) = N . L : if N & L are unit vectors
+  - Normalizing a vector gets the unit vector
+    - unit(V) = <Vx / ||V||, Vy / ||V||, Vz / ||V||>
+    - ||V|| = sqrt( x^2 + y^2 + z^2 )
+
+Specular Reflection (shinny)
+-------------------
+- L : point light source
+  - <x, y, z> (0, 255)
+- Ks : constant of specular reflection
+  - (0, 1)
+- N : normal to surface
+- Reflected in a specific direction
+  - R : reflected vector
+- V : viewing vector
+- alpha : angle between R and V
