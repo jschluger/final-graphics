@@ -8,62 +8,8 @@
 #include "math.h"
 #include "gmath.h"
 
-void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
-}
-/*======== void add_polygon() ==========
-Inputs:   struct matrix *surfaces
-         double x0
-         double y0
-         double z0
-         double x1
-         double y1
-         double z1
-         double x2
-         double y2
-         double z2  
-Returns: 
-Adds the vertices (x0, y0, z0), (x1, y1, z1)
-and (x2, y2, z2) to the polygon matrix. They
-define a single triangle surface.
-====================*/
-void add_polygon( struct matrix *polygons, 
-		  double x0, double y0, double z0, 
-		  double x1, double y1, double z1, 
-		  double x2, double y2, double z2 ) {
-
-  add_point( polygons, x0, y0, z0 );
-  add_point( polygons, x1, y1, z1 );
-  add_point( polygons, x2, y2, z2 );
-}
-
-/*======== struct matrix * generate_normal() ==========
-Inputs:   struct matrix *polygon
-          int point -- starting point in the matrix
-Returns: 
-normal line from given polygon
-====================*/
-struct matrix * generate_normal( struct matrix * polygon, int point ) {
-  struct matrix * A = new_matrix(4, 0);
-  struct matrix * B = new_matrix(4, 0);
-  struct matrix * ret = new_matrix(4, 0);
-  add_point( A,
-	     polygon->m[X][1 + point] - polygon->m[X][point],
-	     polygon->m[Y][1 + point] - polygon->m[Y][point],
-	     polygon->m[Z][1 + point] - polygon->m[Z][point] );
-  add_point( B,
-	     polygon->m[X][2 + point] - polygon->m[X][point],
-	     polygon->m[Y][2 + point] - polygon->m[Y][point],
-	     polygon->m[Z][2 + point] - polygon->m[Z][point] );
-  add_point( ret,
-	     A->m[Y][0]*B->m[Z][0] - A->m[Z][0]*B->m[Y][0],
-	     A->m[Y][0]*B->m[X][0] - A->m[X][0]*B->m[Z][0],
-	     A->m[X][0]*B->m[Y][0] - A->m[Y][0]*B->m[X][0] );
-  return ret;
-	     
-}
-
-void scanline( struct matrix * polygon, int point, screen s ) {
-  int B, M, T; // index of where Bottom, Middle, and Top point of the polygon are
+void scanline_convert( struct matrix *polygon, int point, screen s, zbuffer zb ) {
+    int B, M, T; // index of where Bottom, Middle, and Top point of the polygon are
   B = point;
   M = point + 1;
   T = point + 2;
@@ -196,8 +142,10 @@ void scanline( struct matrix * polygon, int point, screen s ) {
   printf("y: %.2f\tdy: %d\tx0: %.2f\txd0: %.2f\tx1: %.2f\txd1: %.2f\tx2: %.2f\txd2: %.2f\n", y, dy, x0, xd0, x1, xd1, x2, xd2);
 
   int yy;
-  double xA, xB;
-
+  double xA, xB, zA, zB;
+  zA = 0;
+  zB = 0;
+  
   //if (! x1 ) xd1 *= -1;
   //if (! x2 ) xd2 *= -1;
   
@@ -205,7 +153,7 @@ void scanline( struct matrix * polygon, int point, screen s ) {
        yy < polygon->m[Y][T];
        yy+=dy) {
     
-    draw_line( xA, yy, xB, yy, s, c ) ;
+    draw_line( xA, yy, zA, xB, yy, zB, s, zb, c ) ;
     printf("drawing line (%.2f, %d) to (%.2f, %d)\n", xA, yy, xB, yy);
     xA += xd0;
     
@@ -215,6 +163,60 @@ void scanline( struct matrix * polygon, int point, screen s ) {
       xB += xd1;
 
   }
+}
+/*======== void add_polygon() ==========
+Inputs:   struct matrix *surfaces
+         double x0
+         double y0
+         double z0
+         double x1
+         double y1
+         double z1
+         double x2
+         double y2
+         double z2  
+Returns: 
+Adds the vertices (x0, y0, z0), (x1, y1, z1)
+and (x2, y2, z2) to the polygon matrix. They
+define a single triangle surface.
+====================*/
+void add_polygon( struct matrix *polygons, 
+		  double x0, double y0, double z0, 
+		  double x1, double y1, double z1, 
+		  double x2, double y2, double z2 ) {
+
+  add_point( polygons, x0, y0, z0 );
+  add_point( polygons, x1, y1, z1 );
+  add_point( polygons, x2, y2, z2 );
+}
+
+/*======== struct matrix * generate_normal() ==========
+Inputs:   struct matrix *polygon
+          int point -- starting point in the matrix
+Returns: 
+normal line from given polygon
+====================*/
+struct matrix * generate_normal( struct matrix * polygon, int point ) {
+  struct matrix * A = new_matrix(4, 0);
+  struct matrix * B = new_matrix(4, 0);
+  struct matrix * ret = new_matrix(4, 0);
+  add_point( A,
+	     polygon->m[X][1 + point] - polygon->m[X][point],
+	     polygon->m[Y][1 + point] - polygon->m[Y][point],
+	     polygon->m[Z][1 + point] - polygon->m[Z][point] );
+  add_point( B,
+	     polygon->m[X][2 + point] - polygon->m[X][point],
+	     polygon->m[Y][2 + point] - polygon->m[Y][point],
+	     polygon->m[Z][2 + point] - polygon->m[Z][point] );
+  add_point( ret,
+	     A->m[Y][0]*B->m[Z][0] - A->m[Z][0]*B->m[Y][0],
+	     A->m[Y][0]*B->m[X][0] - A->m[X][0]*B->m[Z][0],
+	     A->m[X][0]*B->m[Y][0] - A->m[Y][0]*B->m[X][0] );
+  return ret;
+	     
+}
+
+void scanline( struct matrix * polygon, int point, screen s ) {
 }
 
 
@@ -243,7 +245,7 @@ void draw_polygons( struct matrix *polygons, screen s, zbuffer zb, color c ) {
     if ( normal[2] > 0 ) {
       
       //printf("polygon %d\n", point);
-      /* scanline_convert( polygons, point, s, zb ); */
+      scanline_convert( polygons, point, s, zb );
       /* c.red = 0; */
       /* c.green = 255; */
       /* c.blue = 0; */

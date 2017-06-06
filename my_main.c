@@ -249,6 +249,8 @@ void my_main() {
   screen s;
   double tmp_value;
   char frame_name[150];
+
+  zbuffer zb;
   
   struct matrix * make;
   make = NULL;
@@ -310,7 +312,7 @@ void my_main() {
 		      op[i].op.sphere.d[2],
 		      op[i].op.sphere.r, STEP );
 	  matrix_mult(TOP_OF_(cstack), edges);
-	  draw_polygons( edges, s, c );
+	  draw_polygons( edges, s, zb, c );
 	  printf("after drawing polys\n");
 	  edges->lastcol = 0;
 	  break;
@@ -322,7 +324,7 @@ void my_main() {
 		     op[i].op.torus.r0,
 		     op[i].op.torus.r1, STEP );
 	  matrix_mult(TOP_OF_(cstack), edges);
-	  draw_polygons( edges, s, c );
+	  draw_polygons( edges, s, zb, c);
 	  edges->lastcol = 0;
 	  break;
 	case BOX:
@@ -334,7 +336,7 @@ void my_main() {
 		   op[i].op.box.d1[1],
 		   op[i].op.box.d1[2]);
 	  matrix_mult(TOP_OF_(cstack), edges);
-	  draw_polygons( edges, s, c );
+	  draw_polygons( edges, s, zb, c);
 	  edges->lastcol = 0;
 	  break;
 	case LINE:
@@ -346,7 +348,7 @@ void my_main() {
 		    op[i].op.line.p1[1],
 		    op[i].op.line.p1[1] );
 	  matrix_mult(TOP_OF_(cstack), edges);
-	  draw_lines( edges, s, c );
+	  draw_lines( edges, s, zb, c );
 	  edges->lastcol = 0;
 	  break;
 	case MESH:
